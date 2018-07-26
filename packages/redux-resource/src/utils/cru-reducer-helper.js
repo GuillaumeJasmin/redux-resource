@@ -67,7 +67,10 @@ export default function(state, action, { initialResourceMeta }, updatedMeta) {
   const newMeta = setResourceMeta({
     resources,
     meta: state.meta,
-    newMeta: updatedMeta,
+    newMeta: {
+      ...action.meta,
+      ...updatedMeta,
+    },
     mergeMeta: action.mergeMeta,
     initialResourceMeta,
   });
