@@ -12,8 +12,11 @@ export default function includedResources(resourceType, options = {}) {
     const { initialResourceMeta } = options;
     const { includedResources, mergeMeta, mergeResources, type } = action;
 
-    // This plugin only works for successful reads at the moment
-    if (type !== actionTypes.READ_RESOURCES_SUCCEEDED && type !== actionTypes.CREATE_RESOURCES_SUCCEEDED) {
+    const isReadType = type === actionTypes.READ_RESOURCES_SUCCEEDED;
+    const isCreateType = type === actionTypes.CREATE_RESOURCES_SUCCEEDED;
+    const isUpdateType = type === actionTypes.UPDATE_RESOURCES_SUCCEEDED;
+
+    if (!isReadType && !isCreateType && !isUpdateType) {
       return state;
     }
 
@@ -35,12 +38,20 @@ export default function includedResources(resourceType, options = {}) {
       mergeResources
     );
 
+    const newMeta = {
+      readStatus: requestStatuses.SUCCEEDED,
+    };
+
+    if (isCreateType) {
+      newMeta.createStatus = requestStatuses.SUCCEEDED;
+    } else if (isUpdateType) {
+      newMeta.updateStatus = requestStatuses.SUCCEEDED;
+    }
+
     const meta = setResourceMeta({
       resources: includedResourceList,
       meta: state.meta,
-      newMeta: {
-        readStatus: requestStatuses.SUCCEEDED,
-      },
+      newMeta,
       initialResourceMeta,
       mergeMeta,
     });

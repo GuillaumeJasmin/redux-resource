@@ -9,13 +9,13 @@ describe('includedResources', function() {
     const state = {
       selectedIds: [24],
       resources: {
-        24: { id: 24, name: 'Book24' }
+        24: { id: 24, name: 'Book24' },
       },
       meta: {
-        24: { oinky: true }
+        24: { oinky: true },
       },
       lists: {},
-      requests: {}
+      requests: {},
     };
 
     const action = {
@@ -26,10 +26,10 @@ describe('includedResources', function() {
         books: {
           23: {
             id: 23,
-            name: 'Book23'
-          }
-        }
-      }
+            name: 'Book23',
+          },
+        },
+      },
     };
 
     const result = reducer(state, action);
@@ -42,19 +42,19 @@ describe('includedResources', function() {
     const state = {
       selectedIds: [24],
       resources: {
-        24: { id: 24, name: 'Book24' }
+        24: { id: 24, name: 'Book24' },
       },
       meta: {
-        24: { oinky: true }
+        24: { oinky: true },
       },
       lists: {},
-      requests: {}
+      requests: {},
     };
 
     const action = {
       type: actionTypes.READ_RESOURCES_SUCCEEDED,
       resourceName: 'authors',
-      resources: [10, 200]
+      resources: [10, 200],
     };
 
     const result = reducer(state, action);
@@ -67,13 +67,13 @@ describe('includedResources', function() {
     const state = {
       selectedIds: [24],
       resources: {
-        24: { id: 24, name: 'Book24' }
+        24: { id: 24, name: 'Book24' },
       },
       meta: {
-        24: { oinky: true }
+        24: { oinky: true },
       },
       lists: {},
-      requests: {}
+      requests: {},
     };
 
     const action = {
@@ -81,29 +81,29 @@ describe('includedResources', function() {
       resourceName: 'authors',
       resources: [10, 200],
       includedResources: {
-        sandwiches: [{ id: 2 }, { id: 4 }]
-      }
+        sandwiches: [{ id: 2 }, { id: 4 }],
+      },
     };
 
     const result = reducer(state, action);
     expect(result).to.equal(state);
   });
 
-  it('should add included resources when passed as an object', () => {
+  it('should add included resources when passed as an object with READ_RESOURCES_SUCCEEDED', () => {
     const reducer = includedResources('books');
 
     const state = {
       selectedIds: [24],
       resources: {
         23: { id: 23, color: 'blue' },
-        24: { id: 24, name: 'Book24' }
+        24: { id: 24, name: 'Book24' },
       },
       meta: {
         24: { oinky: true },
-        23: { oinky: false }
+        23: { oinky: false },
       },
       lists: {},
-      requests: {}
+      requests: {},
     };
 
     const action = {
@@ -114,10 +114,10 @@ describe('includedResources', function() {
         books: {
           23: {
             id: 23,
-            name: 'Book23'
-          }
-        }
-      }
+            name: 'Book23',
+          },
+        },
+      },
     };
 
     const result = reducer(state, action);
@@ -125,14 +125,116 @@ describe('includedResources', function() {
       selectedIds: [24],
       resources: {
         24: { id: 24, name: 'Book24' },
-        23: { id: 23, name: 'Book23', color: 'blue' }
+        23: { id: 23, name: 'Book23', color: 'blue' },
       },
       meta: {
         23: { readStatus: 'SUCCEEDED', oinky: false },
-        24: { oinky: true }
+        24: { oinky: true },
       },
       lists: {},
-      requests: {}
+      requests: {},
+    });
+  });
+
+  it('should add included resources when passed as an object with CREATE_RESOURCES_SUCCEEDED', () => {
+    const reducer = includedResources('books');
+
+    const state = {
+      selectedIds: [24],
+      resources: {
+        23: { id: 23, color: 'blue' },
+        24: { id: 24, name: 'Book24' },
+      },
+      meta: {
+        24: { oinky: true },
+        23: { oinky: false },
+      },
+      lists: {},
+      requests: {},
+    };
+
+    const action = {
+      type: actionTypes.CREATE_RESOURCES_SUCCEEDED,
+      resourceName: 'authors',
+      resources: [10, 200],
+      includedResources: {
+        books: {
+          23: {
+            id: 23,
+            name: 'Book23',
+          },
+        },
+      },
+    };
+
+    const result = reducer(state, action);
+    expect(result).to.deep.equal({
+      selectedIds: [24],
+      resources: {
+        24: { id: 24, name: 'Book24' },
+        23: { id: 23, name: 'Book23', color: 'blue' },
+      },
+      meta: {
+        23: {
+          readStatus: 'SUCCEEDED',
+          createStatus: 'SUCCEEDED',
+          oinky: false,
+        },
+        24: { oinky: true },
+      },
+      lists: {},
+      requests: {},
+    });
+  });
+
+  it('should add included resources when passed as an object with UPDATE_RESOURCES_SUCCEEDED', () => {
+    const reducer = includedResources('books');
+
+    const state = {
+      selectedIds: [24],
+      resources: {
+        23: { id: 23, color: 'blue' },
+        24: { id: 24, name: 'Book24' },
+      },
+      meta: {
+        24: { oinky: true },
+        23: { oinky: false },
+      },
+      lists: {},
+      requests: {},
+    };
+
+    const action = {
+      type: actionTypes.UPDATE_RESOURCES_SUCCEEDED,
+      resourceName: 'authors',
+      resources: [10, 200],
+      includedResources: {
+        books: {
+          23: {
+            id: 23,
+            name: 'Book23',
+          },
+        },
+      },
+    };
+
+    const result = reducer(state, action);
+    expect(result).to.deep.equal({
+      selectedIds: [24],
+      resources: {
+        24: { id: 24, name: 'Book24' },
+        23: { id: 23, name: 'Book23', color: 'blue' },
+      },
+      meta: {
+        23: {
+          readStatus: 'SUCCEEDED',
+          updateStatus: 'SUCCEEDED',
+          oinky: false,
+        },
+        24: { oinky: true },
+      },
+      lists: {},
+      requests: {},
     });
   });
 
@@ -142,14 +244,14 @@ describe('includedResources', function() {
     const state = {
       selectedIds: [24],
       resources: {
-        24: { id: 24, name: 'Book24' }
+        24: { id: 24, name: 'Book24' },
       },
       meta: {
         24: { oinky: true },
-        23: { oinky: false }
+        23: { oinky: false },
       },
       lists: {},
-      requests: {}
+      requests: {},
     };
 
     const action = {
@@ -161,10 +263,10 @@ describe('includedResources', function() {
         books: {
           23: {
             id: 23,
-            name: 'Book23'
-          }
-        }
-      }
+            name: 'Book23',
+          },
+        },
+      },
     };
 
     const result = reducer(state, action);
@@ -172,14 +274,14 @@ describe('includedResources', function() {
       selectedIds: [24],
       resources: {
         24: { id: 24, name: 'Book24' },
-        23: { id: 23, name: 'Book23' }
+        23: { id: 23, name: 'Book23' },
       },
       meta: {
         23: { readStatus: 'SUCCEEDED' },
-        24: { oinky: true }
+        24: { oinky: true },
       },
       lists: {},
-      requests: {}
+      requests: {},
     });
   });
 
@@ -190,13 +292,13 @@ describe('includedResources', function() {
       selectedIds: [24],
       resources: {
         23: { id: 23, color: 'blue' },
-        24: { id: 24, name: 'Book24' }
+        24: { id: 24, name: 'Book24' },
       },
       meta: {
-        24: { oinky: true }
+        24: { oinky: true },
       },
       lists: {},
-      requests: {}
+      requests: {},
     };
 
     const action = {
@@ -208,10 +310,10 @@ describe('includedResources', function() {
         books: {
           23: {
             id: 23,
-            name: 'Book23'
-          }
-        }
-      }
+            name: 'Book23',
+          },
+        },
+      },
     };
 
     const result = reducer(state, action);
@@ -219,14 +321,14 @@ describe('includedResources', function() {
       selectedIds: [24],
       resources: {
         24: { id: 24, name: 'Book24' },
-        23: { id: 23, name: 'Book23' }
+        23: { id: 23, name: 'Book23' },
       },
       meta: {
         23: { readStatus: 'SUCCEEDED' },
-        24: { oinky: true }
+        24: { oinky: true },
       },
       lists: {},
-      requests: {}
+      requests: {},
     });
   });
 
@@ -236,13 +338,13 @@ describe('includedResources', function() {
     const state = {
       selectedIds: [24],
       resources: {
-        24: { id: 24, name: 'Book24' }
+        24: { id: 24, name: 'Book24' },
       },
       meta: {
-        24: { oinky: true }
+        24: { oinky: true },
       },
       lists: {},
-      requests: {}
+      requests: {},
     };
 
     const action = {
@@ -253,10 +355,10 @@ describe('includedResources', function() {
         books: [
           {
             id: 23,
-            name: 'Book23'
-          }
-        ]
-      }
+            name: 'Book23',
+          },
+        ],
+      },
     };
 
     const result = reducer(state, action);
@@ -264,14 +366,14 @@ describe('includedResources', function() {
       selectedIds: [24],
       resources: {
         24: { id: 24, name: 'Book24' },
-        23: { id: 23, name: 'Book23' }
+        23: { id: 23, name: 'Book23' },
       },
       meta: {
         23: { readStatus: 'SUCCEEDED' },
-        24: { oinky: true }
+        24: { oinky: true },
       },
       lists: {},
-      requests: {}
+      requests: {},
     });
   });
 
@@ -281,24 +383,24 @@ describe('includedResources', function() {
     const state = {
       selectedIds: [24],
       resources: {
-        24: { id: 24, name: 'comment24' }
+        24: { id: 24, name: 'comment24' },
       },
       meta: {
-        24: { oinky: true }
+        24: { oinky: true },
       },
       lists: {},
-      requests: {}
+      requests: {},
     };
 
     const user = new schema.Entity('users');
 
     const comment = new schema.Entity('comments', {
-      commenter: user
+      commenter: user,
     });
 
     const article = new schema.Entity('articles', {
       author: user,
-      comments: [comment]
+      comments: [comment],
     });
 
     const originalData = [
@@ -306,7 +408,7 @@ describe('includedResources', function() {
         id: '123',
         author: {
           id: '1',
-          name: 'Paul'
+          name: 'Paul',
         },
         title: 'My awesome blog post',
         comments: [
@@ -314,11 +416,11 @@ describe('includedResources', function() {
             id: '324',
             commenter: {
               id: '2',
-              name: 'Nicole'
-            }
-          }
-        ]
-      }
+              name: 'Nicole',
+            },
+          },
+        ],
+      },
     ];
 
     const normalizedData = normalize(originalData, [article]);
@@ -327,7 +429,7 @@ describe('includedResources', function() {
       type: actionTypes.READ_RESOURCES_SUCCEEDED,
       resourceName: article.key,
       resources: normalizedData.result,
-      includedResources: normalizedData.entities
+      includedResources: normalizedData.entities,
     };
 
     const result = reducer(state, action);
@@ -335,14 +437,14 @@ describe('includedResources', function() {
       selectedIds: [24],
       resources: {
         24: { id: 24, name: 'comment24' },
-        324: { id: '324', commenter: '2' }
+        324: { id: '324', commenter: '2' },
       },
       meta: {
         324: { readStatus: 'SUCCEEDED' },
-        24: { oinky: true }
+        24: { oinky: true },
       },
       lists: {},
-      requests: {}
+      requests: {},
     });
   });
 
@@ -352,24 +454,24 @@ describe('includedResources', function() {
     const state = {
       selectedIds: [24],
       resources: {
-        24: { id: 24, name: 'comment24' }
+        24: { id: 24, name: 'comment24' },
       },
       meta: {
-        24: { oinky: true }
+        24: { oinky: true },
       },
       lists: {},
-      requests: {}
+      requests: {},
     };
 
     const user = new schema.Entity('users');
 
     const comment = new schema.Entity('comments', {
-      commenter: user
+      commenter: user,
     });
 
     const article = new schema.Entity('articles', {
       author: user,
-      comments: [comment]
+      comments: [comment],
     });
 
     const originalData = [
@@ -377,7 +479,7 @@ describe('includedResources', function() {
         id: '123',
         author: {
           id: '1',
-          name: 'Paul'
+          name: 'Paul',
         },
         title: 'My awesome blog post',
         comments: [
@@ -385,11 +487,11 @@ describe('includedResources', function() {
             id: '324',
             commenter: {
               id: '2',
-              name: 'Nicole'
-            }
-          }
-        ]
-      }
+              name: 'Nicole',
+            },
+          },
+        ],
+      },
     ];
 
     const normalizedData = normalize(originalData, [article]);
@@ -398,7 +500,7 @@ describe('includedResources', function() {
       type: actionTypes.READ_RESOURCES_SUCCEEDED,
       resourceName: article.key,
       resources: normalizedData.result,
-      includedResources: normalizedData.entities
+      includedResources: normalizedData.entities,
     };
 
     const result = reducer(state, action);
@@ -410,15 +512,15 @@ describe('includedResources', function() {
           id: '123',
           author: '1',
           title: 'My awesome blog post',
-          comments: ['324']
-        }
+          comments: ['324'],
+        },
       },
       meta: {
         123: { readStatus: 'SUCCEEDED' },
-        24: { oinky: true }
+        24: { oinky: true },
       },
       lists: {},
-      requests: {}
+      requests: {},
     });
   });
 });
